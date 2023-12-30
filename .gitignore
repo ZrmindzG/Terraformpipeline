@@ -1,0 +1,29 @@
+# Local .terraform directories
+**/.terraform/*
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Exclude CLI configuration files
+terraform.rc
+
+# Exclude sensitive variables file
+*.auto.tfvars
+*.tfvars
+
+# Exclude override files as they are usually used to override resources locally and don't need to be committed
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Exclude AWS S3 bucket files
+*.tfstate.backup
+
+# Exclude provider credentials files
+terraform.tfstate.*
