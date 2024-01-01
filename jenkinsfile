@@ -1,47 +1,60 @@
 pipeline {
-
-    
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('terraform-aws-omprasad1')
-        AWS_SECRET_ACCESS_KEY = credentials('terraform-aws-omprasad1')
+        TF_CLI_ARGS = "-input=false"
+        TF_WORKSPACE = "default"
     }
+
     stages {
-        stage('Terraform Initialization') {
+        stage('Install Terraform') {
             steps {
-                echo 'Terraform Initialization is In Progress!'
-                sh 'terraform --version'
+                script {
+                    // Install Terraform
+                    sh 'curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg'
+                    sh 'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null'
+                    sh 'sudo apt-get update && sudo apt-get install terraform'
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                script {
+                    // Initialize Terraform
+                    sh 'terraform init -input=false'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                echo 'Terraform Initialization is In Progress!'
-                sh 'terraform plan -out myplan'
+                script {
+                    // Generate Terraform plan
+                    sh 'terraform plan -out=tfplan -input=false'
+                }
             }
         }
-        stage('Approval') {
-            when {
-                not {
-                    equals expected: true, actual: params.autoApprove
-                }
-            }
 
+        stage('Manual Approval') {
             steps {
-                script {
-                    def plan = readFile 'tfplan.txt'
-                    input message: "Do you want to apply the plan?",
-                        parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-                }
+                input 'Do you want to apply the Terraform plan?'
             }
-        }       
+        }
+
         stage('Terraform Apply') {
             steps {
-                echo 'Terraform Apply'
-                sh 'terraform apply --auto-approve'
+                script {
+                    // Apply Terraform plan
+                    sh 'terraform apply -input=false tfplan'
+                }
             }
         }
-	}
+    }
 
+    post {
+        always {
+            // Clean up workspace or perform any post-build actions
+        }
+    }
 }
