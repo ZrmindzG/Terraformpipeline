@@ -1,11 +1,11 @@
 pipeline{
     options{
-        buildDiscader(logRotator(numToKeepStr: '5',artifactNumToKeepStr:'5'))
+        buildDiscader(logRotator(numToKeepStr: '4',artifactNumToKeepStr:'4'))
     }
     agent any{
         environment {
-            AWS_ACCESS_KEY_ID= credentials('terraform-aws-omprasad')
-            AWS_SECRET_ACCESS_KEY=credentials('terraform-aws-omprasad')
+            AWS_ACCESS_KEY_ID= credentials('terraform-aws-omprasad1')
+            AWS_SECRET_ACCESS_KEY=credentials('terraform-aws-omprasad1')
         }
         stages{
             stage('Terraform version'){
