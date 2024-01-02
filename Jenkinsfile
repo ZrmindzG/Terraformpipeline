@@ -17,42 +17,44 @@ pipeline {
                 sh 'terraform --version'
             }
         }
-        stage('Terraform init') {
+        stage('Terraform initgit') {
             steps {
                 echo 'Terraform Initialization is In Progress!'
                 sh 'terraform init'
             }
         }
 
-
-
-        stage('Terraform Plan') {
-            steps {
-                echo 'Terraform Initialization is In Progress!'
-                sh 'terraform plan -out myplan'
+         tage('Terraform plan'){
+               steps{
+                    echo 'Terraform initilization is in Progress!'
+                    sh 'terraform plan -var-file=terraform.tfvars -out=tfplan.txt'
+                } 
             }
-        }
-        stage('Approval') {
-            when {
-                not {
-                    equals expected: true, actual: params.autoApprove
+            stage('approval'){
+                when{
+                    not{
+                        equals expected: true, actual: params.autoapprove
+                    }
                 }
             }
-
-            steps {
-                script {
-                    def plan = readFile 'tfplan.txt'
-                    input message: "Do you want to apply the plan?",
-                        parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+            steps{
+                script{
+                    def plan= readFile 'tfplan.txt'
+                    input message: "do you want to apply the plan?",
+                    parameters: [text(name:'plan',description:'Please review the plan',defaultValue:plan)]
+                    
+                    }
                 }
             }
+            stage('Terraform Apply'){
+                steps{
+                    echo 'Terraform Apply'
+                    sh 'terraform apply --auto-approve'
+                 }
+
+            } 
         }       
-        stage('Terraform Apply') {
-            steps {
-                echo 'Terraform Apply'
-                sh 'terraform apply --auto-approve'
-            }
-        }
+        
 	}
 
 }
