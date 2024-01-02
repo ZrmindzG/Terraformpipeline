@@ -24,7 +24,7 @@ pipeline {
             }
         }
 
-         tage('Terraform plan'){
+         stage('Terraform plan'){
                steps{
                     echo 'Terraform initilization is in Progress!'
                     sh 'terraform plan -var-file=terraform.tfvars -out=tfplan.txt'
@@ -45,7 +45,6 @@ pipeline {
                     
                     }
                 }
-            }
             stage('Terraform Apply'){
                 steps{
                     echo 'Terraform Apply'
@@ -53,8 +52,9 @@ pipeline {
                  }
 
             } 
-        }       
-    }
- }
+        }     
+        
+    }       
+    
 
-}
+
