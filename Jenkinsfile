@@ -1,7 +1,7 @@
 pipeline{
     options{
-        buildDiscader(logRotator(numToKeepStr: '5',artifactNumToKeepStr:'5'))
-    }
+           buildDiscarder(logRotator(numToKeepstr: '5',artifactNumToKeepstr:'5'))
+}
     agent any{
         environment {
             AWS_ACCESS_KEY_ID= credentials('terraform-aws-omprasad1')
