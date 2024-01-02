@@ -4,27 +4,31 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
     }
 
-    agent any
-
-    environment {
-        AWS_ACCESS_KEY_ID     = credentials('terraform-aws-omprasad1')
-        AWS_SECRET_ACCESS_KEY = credentials('terraform-aws-omprasad1')
-    }
-    stages {
-        stage('Terraform Initialization') {
-            steps {
-                echo 'Terraform Initialization is In Progress!'
-                sh 'terraform --version'
-            }
+    agent any{
+        environment {
+            AWS_ACCESS_KEY_ID= credentials('terraform-aws-omprasad1')
+            AWS_SECRET_ACCESS_KEY=credentials('terraform-aws-omprasad1')
         }
-        stage('Terraform initgit') {
-            steps {
-                echo 'Terraform Initialization is In Progress!'
-                sh 'terraform init'
-            }
-        }
+        stages{
+            stage('Terraform version'){
+                steps{
+                    echo 'Terraform initilization is in Progress!'
+                    sh 'terraform --version'
+                }
 
-         stage('Terraform plan'){
+            stage('Terraform format'){
+                steps{
+                    echo 'Terraform initilization is in Progress!'
+                    sh 'terraform fmt'
+                }
+            }
+            stage('Terraform init'){
+               steps{
+                    echo 'Terraform initilization is in Progress!'
+                    sh 'terraform init'
+                } 
+            }
+            tage('Terraform plan'){
                steps{
                     echo 'Terraform initilization is in Progress!'
                     sh 'terraform plan -var-file=terraform.tfvars -out=tfplan.txt'
@@ -45,16 +49,17 @@ pipeline {
                     
                     }
                 }
+            }
             stage('Terraform Apply'){
                 steps{
                     echo 'Terraform Apply'
                     sh 'terraform apply --auto-approve'
                  }
 
-            } 
-        }     
-        
-    }       
+            }
+        }
+    }
+}       
     
 
 
