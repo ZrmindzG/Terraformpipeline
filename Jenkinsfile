@@ -33,7 +33,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 echo 'Terraform initilization is in Progress!'
-                sh 'terraform plan -var-file=terraform.tfvars -out=tfplan.txt'
+                
             }
         }
         stage('Approval') {
