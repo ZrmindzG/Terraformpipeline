@@ -17,11 +17,23 @@ pipeline {
                 sh 'terraform --version'
             }
         }
+        stage('Terraform format'){
+                steps{
+                    echo 'Terraform initilization is in Progress!'
+                    sh 'terraform fmt'
+                }
+            }
+            stage('Terraform init'){
+               steps{
+                    echo 'Terraform initilization is in Progress!'
+                    sh 'terraform init'
+                } 
+            }
 
         stage('Terraform Plan') {
             steps {
-                echo 'Terraform Initialization is In Progress!'
-                sh 'terraform plan -out myplan'
+                echo 'Terraform initilization is in Progress!'
+                sh 'terraform plan -var-file=terraform.tfvars -out=tfplan.txt'
             }
         }
         stage('Approval') {
