@@ -33,13 +33,13 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 echo 'Terraform initilization is in Progress!'
-                sh 'terraform plan -var-file=terraform.tfvars -out=tfplan1.txt'
+                sh 'terraform plan -var-file=terraform.tfvars -out=tfplan.txt'
             }
         }
         stage('Approval') {
             when {
                 not {
-                    equals expected: true, actual: params.autoApprove
+                    equals expected: true, actual: params.autoapprove
                 }
             }
 
